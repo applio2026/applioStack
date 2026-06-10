@@ -34,7 +34,7 @@ export default function Hero() {
           <a className="btn btn-primary btn-lg" href="#products">
             Explore products <Icon name="arrow-r" />
           </a>
-          <Link className="btn btn-secondary btn-lg" to="/contact">
+          <Link className="btn btn-secondary btn-lg" to="/book-demo">
             Request a demo
           </Link>
         </div>

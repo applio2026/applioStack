@@ -14,7 +14,7 @@ const PLANS = [
       'Email support · 48 h SLA',
       'Applio-managed cloud · India region',
     ],
-    cta: { label: 'Start free pilot', className: 'btn btn-secondary' },
+    cta: { label: 'Start free pilot', className: 'btn btn-secondary', to: '/book-demo' },
   },
   {
     name: 'Professional',
@@ -31,7 +31,7 @@ const PLANS = [
       'Named onboarding engineer',
       'Statutory reports (NAAC, UGC, GST)',
     ],
-    cta: { label: 'Start 30-day trial', className: 'btn btn-accent' },
+    cta: { label: 'Start 30-day trial', className: 'btn btn-accent', to: '/book-demo' },
   },
   {
     name: 'Enterprise',
@@ -108,9 +108,9 @@ export default function Pricing() {
           <div className="alert-text">
             Groups of 5–20 institutions get 20% off list price. 20+ institutions qualify for custom
             enterprise pricing.{' '}
-            <a href="#" style={{ color: 'var(--accent)' }}>
+            <Link to="/contact" style={{ color: 'var(--accent)' }}>
               Talk to our sales team →
-            </a>
+            </Link>
           </div>
         </div>
       </div>

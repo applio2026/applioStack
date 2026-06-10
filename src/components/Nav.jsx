@@ -1,12 +1,11 @@
-import Icon from './Icon'
+import { Link } from 'react-router-dom'
 import { useScrollSpy } from '../hooks/useScrollSpy'
 
 const LINKS = [
-  { href: '#products', label: 'Products' },
-  { href: '#features', label: 'Features' },
-  { href: '#pricing', label: 'Pricing' },
-  { href: '#', label: 'Customers' },
-  { href: '#', label: 'Docs' },
+  { to: '/#products', id: 'products', label: 'Products' },
+  { to: '/#features', id: 'features', label: 'Features' },
+  { to: '/#pricing', id: 'pricing', label: 'Pricing' },
+  { to: '/contact', label: 'Contact' },
 ]
 
 export default function Nav() {
@@ -14,7 +13,7 @@ export default function Nav() {
 
   return (
     <header className="site-nav">
-      <a className="nav-logo" href="#">
+      <Link className="nav-logo" to="/">
         <div className="mark-bars">
           <div className="bar-1" />
           <div className="bar-2" />
@@ -23,16 +22,16 @@ export default function Nav() {
         <span className="wordmark">
           Applio <span>Stack</span>
         </span>
-      </a>
+      </Link>
       <nav className="nav-links">
-        {LINKS.map((link, i) => (
-          <a
-            key={i}
-            href={link.href}
-            className={link.href === `#${activeId}` ? 'active' : undefined}
+        {LINKS.map((link) => (
+          <Link
+            key={link.label}
+            to={link.to}
+            className={link.id && link.id === activeId ? 'active' : undefined}
           >
             {link.label}
-          </a>
+          </Link>
         ))}
       </nav>
       <div className="nav-actions">
@@ -40,9 +39,9 @@ export default function Nav() {
           <span className="dot" />
           All systems operational
         </span>
-        <a className="btn btn-primary btn-sm" href="#pricing">
-          Get started
-        </a>
+        <Link className="btn btn-primary btn-sm" to="/book-demo">
+          Book a demo
+        </Link>
       </div>
     </header>
   )

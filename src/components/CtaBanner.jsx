@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import Icon from './Icon'
 
 export default function CtaBanner() {
@@ -12,17 +13,17 @@ export default function CtaBanner() {
           </p>
         </div>
         <div className="cta-actions">
-          <a className="btn btn-accent btn-lg" href="#">
+          <Link className="btn btn-accent btn-lg" to="/book-demo">
             <Icon name="plus" />
             Start free pilot
-          </a>
-          <a
+          </Link>
+          <Link
             className="btn btn-ghost btn-lg"
-            href="#"
+            to="/book-demo"
             style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.2)' }}
           >
             Book a demo
-          </a>
+          </Link>
         </div>
       </div>
     </section>

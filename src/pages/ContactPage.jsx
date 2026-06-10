@@ -57,10 +57,16 @@ export default function ContactPage() {
           Mon–Fri · 9:00–18:00 IST · Applio Technologies Pvt. Ltd., Bengaluru, India
         </p>
 
-        <Link className="btn btn-secondary" to="/">
-          <Icon name="arrow-r" style={{ transform: 'rotate(180deg)' }} />
-          Back to home
-        </Link>
+        <div className="row">
+          <Link className="btn btn-primary" to="/book-demo">
+            Book a demo
+            <Icon name="arrow-r" />
+          </Link>
+          <Link className="btn btn-secondary" to="/">
+            <Icon name="arrow-r" style={{ transform: 'rotate(180deg)' }} />
+            Back to home
+          </Link>
+        </div>
       </div>
     </main>
   )

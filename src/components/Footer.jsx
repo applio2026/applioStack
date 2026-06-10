@@ -1,37 +1,59 @@
+import { Link } from 'react-router-dom'
+import { PRODUCTS } from '../data/products'
+
 const COLUMNS = [
   {
     title: 'Products',
-    links: [
-      'University EMS',
-      'Colleges EMS',
-      'School EMS',
-      'Examination Management',
-      'Smart LMS',
-      'Academic Process Management',
-      'Finance & Accounting',
-      'HR & Payroll',
-    ],
+    links: PRODUCTS.map((p) => ({ label: p.title, to: `/products/${p.slug}` })),
   },
   {
     title: 'Platform',
-    links: ['Overview', 'Integrations', 'Security', 'Compliance', 'API docs', 'Status page'],
+    links: [
+      { label: 'Overview', to: '/#products' },
+      { label: 'Integrations' },
+      { label: 'Security' },
+      { label: 'Compliance' },
+      { label: 'API docs' },
+      { label: 'Status page' },
+    ],
   },
   {
     title: 'Company',
-    links: ['About', 'Careers', 'Blog', 'Press', 'Partners', 'Contact'],
+    links: [
+      { label: 'About' },
+      { label: 'Careers' },
+      { label: 'Blog' },
+      { label: 'Press' },
+      { label: 'Partners' },
+      { label: 'Contact', to: '/contact' },
+    ],
   },
   {
     title: 'Resources',
-    links: ['Documentation', 'Help centre', 'Webinars', 'Case studies', 'Community', 'Changelog'],
+    links: [
+      { label: 'Book a demo', to: '/book-demo' },
+      { label: 'Documentation' },
+      { label: 'Help centre' },
+      { label: 'Webinars' },
+      { label: 'Case studies' },
+      { label: 'Changelog' },
+    ],
   },
 ]
+
+function FooterLink({ link }) {
+  if (link.to) {
+    return <Link to={link.to}>{link.label}</Link>
+  }
+  return <a href="#">{link.label}</a>
+}
 
 export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="footer-top">
         <div className="footer-brand">
-          <a className="footer-logo" href="#">
+          <Link className="footer-logo" to="/">
             <div className="mark-bars">
               <div className="bar-1" />
               <div className="bar-2" />
@@ -40,7 +62,7 @@ export default function Footer() {
             <span className="wm">
               Applio <span>Stack</span>
             </span>
-          </a>
+          </Link>
           <p>
             Enterprise management software for education, examinations, and finance. Trusted by
             1,400+ institutions across 28 countries.
@@ -56,9 +78,7 @@ export default function Footer() {
             <div className="footer-col" key={col.title}>
               <h5>{col.title}</h5>
               {col.links.map((link) => (
-                <a href="#" key={link}>
-                  {link}
-                </a>
+                <FooterLink link={link} key={link.label} />
               ))}
             </div>
           ))}
