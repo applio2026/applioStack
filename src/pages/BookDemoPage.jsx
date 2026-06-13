@@ -45,11 +45,18 @@ const INITIAL = {
   products: [],
   date: '',
   notes: '',
+  company: '', // honeypot — hidden from humans; a value means a bot filled it
 }
+
+// Issue-tracker API that receives demo requests as tickets.
+const TRACKER_API = import.meta.env.VITE_TRACKER_API_URL || 'http://localhost:4150'
 
 export default function BookDemoPage() {
   const [form, setForm] = useState(INITIAL)
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
+  const [ticketKey, setTicketKey] = useState('')
 
   const set = (key) => (e) => setForm({ ...form, [key]: e.target.value })
 
@@ -61,10 +68,34 @@ export default function BookDemoPage() {
         : [...f.products, slug],
     }))
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSubmitted(true)
-    window.scrollTo(0, 0)
+    if (submitting) return
+    setSubmitting(true)
+    setError('')
+    try {
+      const payload = {
+        ...form,
+        // The ticket should show product names, not slugs.
+        products: form.products.map((slug) => PRODUCTS.find((p) => p.slug === slug)?.title || slug),
+      }
+      const res = await fetch(`${TRACKER_API}/api/public/demo-requests`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      if (!res.ok) throw new Error(`Request failed (${res.status})`)
+      const data = await res.json()
+      setTicketKey(data.ticketKey || '')
+      setSubmitted(true)
+      window.scrollTo(0, 0)
+    } catch {
+      setError(
+        'We could not send your request right now. Please try again in a minute, or reach us via the contact page.',
+      )
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -117,6 +148,11 @@ export default function BookDemoPage() {
                 Thanks, {form.name.split(' ')[0] || 'there'}! Our team will email{' '}
                 <strong>{form.email}</strong> within one business day to confirm your slot
                 {form.date ? ` around ${form.date}` : ''}.
+                {ticketKey ? (
+                  <>
+                    {' '}Your reference is <strong>{ticketKey}</strong>.
+                  </>
+                ) : null}
               </p>
               <div className="alert alert-info">
                 <Icon name="info" className="alert-icon" />
@@ -132,13 +168,26 @@ export default function BookDemoPage() {
                 <Link className="btn btn-primary" to="/">
                   Back to home
                 </Link>
-                <button className="btn btn-ghost" onClick={() => { setForm(INITIAL); setSubmitted(false) }}>
+                <button className="btn btn-ghost" onClick={() => { setForm(INITIAL); setSubmitted(false); setTicketKey('') }}>
                   Book another demo
                 </button>
               </div>
             </div>
           ) : (
             <form className="demo-card" onSubmit={handleSubmit}>
+              {/* Honeypot: visually hidden, ignored by people, filled by bots. */}
+              <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', height: 0, overflow: 'hidden' }}>
+                <label htmlFor="bd-company">Company</label>
+                <input
+                  id="bd-company"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={form.company}
+                  onChange={set('company')}
+                />
+              </div>
+
               <div className="demo-form-row">
                 <div className="field">
                   <label className="label" htmlFor="bd-name">Full name</label>
@@ -249,8 +298,23 @@ export default function BookDemoPage() {
                 />
               </div>
 
-              <button className="btn btn-accent btn-lg" type="submit" style={{ width: '100%' }}>
-                Request demo <Icon name="arrow-r" />
+              {error ? (
+                <div className="alert alert-danger">
+                  <Icon name="info" className="alert-icon" />
+                  <div className="alert-body">
+                    <div className="alert-title">Request not sent</div>
+                    <div className="alert-text">{error}</div>
+                  </div>
+                </div>
+              ) : null}
+
+              <button
+                className="btn btn-accent btn-lg"
+                type="submit"
+                disabled={submitting}
+                style={{ width: '100%' }}
+              >
+                {submitting ? 'Sending…' : <>Request demo <Icon name="arrow-r" /></>}
               </button>
               <p className="help" style={{ textAlign: 'center' }}>
                 By submitting you agree to be contacted about your request. No spam, no resale of
